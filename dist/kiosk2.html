@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<style>
+
+  table{
+    border: 1px solid dodgerblue;
+    width: 100%;
+    height: 100%;
+  }
+
+  .movieImg{
+    height: 300px;
+  }
+
+</style>
+
+<table>
+  <tr>
+    <td>
+      <ul>
+        <li><img class="movieImg" src = "img/m2_1.jpg" onclick="addMovie('심야식당',7000)">심야식당</li>
+        <li><img class="movieImg" src = "img/m3_1.jpg" onclick="addMovie('시카리오',9000)">시카리오</li>
+        <li><img class="movieImg" src = "img/m5_2.jpg" onclick="addMovie('인사이드아웃',15000)">인사이드아웃</li>
+        <li><img class="movieImg" src = "img/m6_1.jpg" onclick="addMovie('곤지암',1000)">곤지암</li>
+      </ul>
+    </td>
+    <td class="cartTd">
+      <h2 id="total">0</h2>
+      <ul id="cart"></ul>
+    </td>
+  </tr>
+</table>
+
+<script>
+
+  var items = new Array();
+  var totalValue = 0;
+  var totalObj = document.querySelector("#total");
+
+  function findObj(mid) {
+
+    for(var obj of items){
+      if(obj.mid == mid){
+        return obj;
+      }
+    }
+    return null;
+  }
+
+  function addMovie(mname, price) {
+
+    var target = findObj(mname);
+    if(!target){
+      items.push({mid:mname,qty:1,price:price});
+    }else{
+      target.qty +=1;
+    }
+    // var itemUL = document.querySelector("#cart");
+    // console.log("add Movie..........."+mname+price);
+    // itemUL.innerHTML +=  "<li>"+mname+": "+price+"</li>";
+    // totalValue += parseInt(price);
+    // totalObj.innerHTML = totalValue;
+    showResult();
+  }
+
+  function minusItem(mid) {
+
+    //find index
+    var idx = -1;
+    for(var i = 0;i<items.length;i++){
+      var mitem = items[i];
+      if(mitem.mid==mid){
+        idx = i;
+        break;
+      }
+    }
+    //delete
+    if(idx != -1){
+      items[idx].qty -= 1;
+      if(items[idx].qty < 0){
+        items[idx].qty = 0;
+      }
+    }
+    showResult();
+  }
+
+
+  function deleteItem(mid) {
+
+    //find index
+    var idx = -1;
+    for(var i = 0;i<items.length;i++){
+      var mitem = items[i];
+      if(mitem.mid==mid){
+        idx = i;
+        break;
+      }
+    }
+    //delete
+    if(idx != -1){
+      items.splice(idx,1);
+    }
+    showResult();
+  }
+
+  function showResult() {
+    var itemUL = document.querySelector("#cart");
+    itemUL.innerHTML="";
+    var sum = 0;
+
+    for(var obj of items){
+
+      var mid = obj.mid;
+      var str = "<li>";
+      str += obj.mid+": "+ obj.qty;
+      str += "<button onclick=deleteItem(\'"+mid+"\')>취소</button><button onclick=minusItem(\'"+mid+"\')>빼기</button></li>";
+      itemUL.innerHTML += str;
+      sum += obj.price * obj.qty;
+    }
+    totalObj.innerHTML = sum;
+  }
+
+</script>
+
+</body>
+</html>
